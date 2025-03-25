@@ -17,7 +17,7 @@ const oneNestGoals = [
 
 const StatsSection = () => {
   return (
-    <section className="py-20 bg-gradient-to-br from-[#E0F7FA] via-[#B4EBE6] to-[#80CBC4] text-center"> 
+    <section className="py-20 bg-gradient-to-br from-[#B4EBE6] via-[#A1E3DD] to-[#80CBC4] text-center"> 
       
       {/* Global Single Parent Stats */}
       <motion.h2 
