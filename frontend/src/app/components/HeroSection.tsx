@@ -54,7 +54,7 @@ const HeroSection = () => {
           </p>
 
           <div className="mt-10 flex justify-center lg:justify-start">
-            <Link href="/register">
+            <Link href="/login">
               <motion.button
                 whileHover={{ scale: 1.1, boxShadow: "0 0 20px #FF8A80" }}
                 whileTap={{ scale: 0.95 }}

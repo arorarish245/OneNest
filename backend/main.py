@@ -1,16 +1,28 @@
 from fastapi import FastAPI
+from models.auth import router as auth_router  # ✅ Import auth router
 from models.user import router as user_router
 from models.financial import router as financial_router
 from models.chat import router as chat_router
 from models.sentiment import router as sentiment_router
+from fastapi.middleware.cors import CORSMiddleware
 
+# Create FastAPI app
 app = FastAPI()
 
-# Register the routers
-app.include_router(user_router)
-app.include_router(financial_router)
-app.include_router(chat_router)
-app.include_router(sentiment_router)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],         # Allow all origins (for testing)
+    allow_credentials=True,
+    allow_methods=["*"],         # Allow all methods (GET, POST, etc.)
+    allow_headers=["*"],         # Allow all headers
+)
+
+# Register routers with prefixes
+app.include_router(auth_router, prefix="/api/auth")
+app.include_router(user_router, prefix="/api/user")
+app.include_router(financial_router, prefix="/api/financial")
+app.include_router(chat_router, prefix="/api/chat")
+app.include_router(sentiment_router, prefix="/api/sentiment")
 
 @app.get("/")
 def root():
