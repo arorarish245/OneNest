@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # MongoDB connection string
-MONGO_URI = os.getenv("MONGO_URI")
+MONGO_URI = os.getenv("MONGODB_URI")
 
 # Connect to MongoDB
 client = MongoClient(MONGO_URI)

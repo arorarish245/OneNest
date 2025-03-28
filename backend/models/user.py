@@ -6,7 +6,7 @@ import os
 
 # Environment setup
 load_dotenv()
-MONGO_URI = os.getenv("MONGO_URI")
+MONGO_URI = os.getenv("MONGODB_URI")
 client = MongoClient(MONGO_URI)
 db = client["OneNest"]
 users = db["users"]
@@ -14,7 +14,6 @@ users = db["users"]
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# ✅ Create the router instance
 router = APIRouter()
 
 # Example route to test

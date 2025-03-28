@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from models import user
 from models.auth import router as auth_router  # ✅ Import auth router
 from models.user import router as user_router
 from models.financial import router as financial_router
@@ -23,6 +24,7 @@ app.include_router(user_router, prefix="/api/user")
 app.include_router(financial_router, prefix="/api/financial")
 app.include_router(chat_router, prefix="/api/chat")
 app.include_router(sentiment_router, prefix="/api/sentiment")
+
 
 @app.get("/")
 def root():

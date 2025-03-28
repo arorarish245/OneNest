@@ -6,15 +6,15 @@ import jwt
 import os
 from dotenv import load_dotenv
 
-# ✅ Load environment variables
+# Load environment variables
 load_dotenv()
 
-# ✅ Environment variables for JWT secret and expiration
+# Environment variables for JWT secret and expiration
 SECRET_KEY = os.getenv("JWT_SECRET", "your_super_secret_key")  # Fallback if missing
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-# ✅ Access the correct variables
+# Access the correct variables
 users = user.users
 pwd_context = user.pwd_context
 
@@ -90,3 +90,12 @@ async def login(user: UserLogin):
         "access_token": access_token, 
         "token_type": "bearer"
     }
+
+@router.get("/users")
+async def get_users():
+    """Fetch all users from the database for verification."""
+    try:
+        all_users = list(users.find({}, {"_id": 0, "email": 1, "created_at": 1}))
+        return {"users": all_users}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
