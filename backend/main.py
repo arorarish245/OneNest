@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from models import user
-from models.auth import router as auth_router  # ✅ Import auth router
+from routes.auth import router as auth_router  # ✅ Import auth router
 from models.user import router as user_router
-from models.financial import router as financial_router
-from models.chat import router as chat_router
-from models.sentiment import router as sentiment_router
+from routes.financial import router as financial_router
+from routes.chat import router as chat_router
+from routes.sentiment import router as sentiment_router
 from fastapi.middleware.cors import CORSMiddleware
 
 # Create FastAPI app
