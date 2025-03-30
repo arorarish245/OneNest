@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import ChatWidget from "./components/ChatWidget";
 
 export const metadata: Metadata = {
   title: "OneNest - Empowering Single Parents",
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body>
         <Navbar />
         <main className="min-h-screen bg-gray-50">{children}</main>
+        {/* <ChatWidget/> */}
       </body>
     </html>
   );

@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import ChatWidget from "./ChatWidget";
 
 const HeroSection = () => {
   return (
@@ -88,6 +89,7 @@ const HeroSection = () => {
           </div>
         </motion.div>
       </div>
+      <ChatWidget/>
     </section>
   );
 };
