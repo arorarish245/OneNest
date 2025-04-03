@@ -37,7 +37,7 @@ def predict_sentiment(text: str):
         try:
             # Extract API response safely
             full_response = response.json()
-            print(f"DEBUG: Full Gemini API Response -> {full_response}")  # Debugging
+            # print(f"DEBUG: Full Gemini API Response -> {full_response}")  # Debugging
 
             candidates = full_response.get("candidates", [])
             if candidates:
@@ -46,7 +46,7 @@ def predict_sentiment(text: str):
 
                 if parts:
                     raw_text = parts[0].get("text", "").strip()
-                    print(f"DEBUG: Extracted Text from Gemini -> {raw_text}")  # Debugging
+                    # print(f"DEBUG: Extracted Text from Gemini -> {raw_text}")  # Debugging
 
                     # **Use regex to extract valid JSON inside backticks**
                     json_match = re.search(r'\{.*\}', raw_text, re.DOTALL)

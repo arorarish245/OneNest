@@ -141,7 +141,7 @@ async def generate_coping_tip(user_text, sentiment, emotion):
         response = requests.post(url, json=data, headers=headers)
         if response.status_code == 200:
             full_response = response.json()
-            print(f"DEBUG: Raw Response from Gemini -> {full_response}")  # Debugging
+            # print(f"DEBUG: Raw Response from Gemini -> {full_response}")  # Debugging
 
             candidates = full_response.get("candidates", [])
             if candidates:
