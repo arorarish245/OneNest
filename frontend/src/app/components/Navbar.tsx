@@ -53,7 +53,7 @@ const Navbar = () => {
                 { href: "/", label: "Home" },
                 { href: "/sentiment", label: "Sentiment Analysis" },
                 { href: "/schemes", label: "Financial Schemes" },
-                { href: "/resource-hub", label: "Resource Hub" },
+                { href: "/resource", label: "Resource Hub" },
                 { href: "/contact", label: "Contact Us" },
               ]
             : [
@@ -112,7 +112,7 @@ const Navbar = () => {
                   { href: "/", label: "Home" },
                   { href: "/sentiment", label: "Sentiment Analysis" },
                   { href: "/schemes", label: "Financial Schemes" },
-                  { href: "/resource-hub", label: "Resource Hub" },
+                  { href: "/resource", label: "Resource Hub" },
                   { href: "/contact", label: "Contact Us" },
                   { href: "/profile", label: "Profile" },
                 ]
