@@ -5,6 +5,7 @@ from models.user import router as user_router
 from routes.financial import router as financial_router
 from routes.chat import router as chat_router
 from routes.sentiment import router as sentiment_router
+from routes.resource import router as resource_router
 from fastapi.middleware.cors import CORSMiddleware
 
 # Create FastAPI app
@@ -24,6 +25,7 @@ app.include_router(user_router, prefix="/api/user")
 app.include_router(financial_router, prefix="/api/financial")
 app.include_router(chat_router, prefix="/api/chat")
 app.include_router(sentiment_router, prefix="/api/sentiment")
+app.include_router(resource_router, prefix="/api/resource")
 
 
 @app.get("/")
