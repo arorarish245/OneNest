@@ -1,34 +1,33 @@
-from fastapi import APIRouter, HTTPException, Query
-from models.db import financial_schemes
+from fastapi import APIRouter
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
+from typing import Optional
+from bson import ObjectId
+from models.financial_scheme_model import FinancialScheme
+from models.db import financial_schemes  # import from db.py
 
 router = APIRouter()
 
-# Add Financial Scheme
-@router.post("/financial-schemes")
-def add_scheme(scheme: dict):
-    financial_schemes.insert_one(scheme)
-    return {"message": "Scheme added successfully"}
-
-# Get All Schemes
+# 1. Get All Schemes
 @router.get("/financial-schemes")
-def get_all_schemes():
-    schemes = list(financial_schemes.find())
-    for scheme in schemes:
-        scheme["_id"] = str(scheme["_id"])
-    return schemes
+async def get_schemes():
+    data = list(financial_schemes.find())
+    for scheme in data:
+        scheme["_id"] = str(scheme["_id"])  # Convert ObjectId
+    print(f"Number of schemes fetched: {len(data)}")  # Debug print
+    return JSONResponse(content=data)
 
-# Filter Schemes by Category
-@router.get("/financial-schemes/filter")
-def filter_schemes(category: str = Query(None), location: str = Query(None)):
-    query = {}
-    if category:
-        query["category"] = category
-    if location:
-        query["location"] = location
+#2. Add New Scheme
+@router.post("/financial-schemes")
+async def add_scheme(scheme: FinancialScheme):
+    new_scheme = jsonable_encoder(scheme)
+    inserted_id = financial_schemes.insert_one(new_scheme).inserted_id
+    return {"message": "Scheme added successfully", "id": str(inserted_id)}
 
-    results = list(financial_schemes.find(query))
-    
-    for scheme in results:
-        scheme["_id"] = str(scheme["_id"])
-    
-    return results
+#3. Delete Scheme
+@router.delete("/financial-schemes/{scheme_id}")
+async def delete_scheme(scheme_id: str):
+    result = financial_schemes.delete_one({"_id": ObjectId(scheme_id)})
+    if result.deleted_count == 1:
+        return {"message": "Scheme deleted"}
+    return {"error": "Scheme not found"}

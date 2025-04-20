@@ -16,6 +16,8 @@ async def get_resources(type: Optional[str] = None):
     for res in data:
         res["_id"] = str(res["_id"])  # Convert ObjectId to string
     return JSONResponse(content=data)
+    
+
 
 # ✅ 2. Add a New Resource
 @router.post("/resources")
