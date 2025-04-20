@@ -1,33 +1,51 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from typing import Optional
 from bson import ObjectId
 from models.financial_scheme_model import FinancialScheme
-from models.db import financial_schemes  # import from db.py
+from models.db import financial_schemes
 
 router = APIRouter()
 
-# 1. Get All Schemes
 @router.get("/financial-schemes")
-async def get_schemes():
-    data = list(financial_schemes.find())
-    for scheme in data:
+async def get_schemes(
+    support: Optional[str] = None,
+    situation: Optional[str] = None,
+    goal: Optional[str] = None,
+    region: Optional[str] = None
+):
+    # Step 1: Combine all tags
+    tags_filter = []
+    if support:
+        tags_filter.append(support)
+    if situation:
+        tags_filter.append(situation)
+    if goal:
+        tags_filter.append(goal)
+
+    query = {}
+
+    # Step 2: Use $in for tags if any
+    if tags_filter:
+        query["tags"] = {"$in": tags_filter}
+
+    # Step 3: Region logic (match region or 'Nationwide')
+    if region:
+        query["$or"] = [
+            {"region": {"$regex": region, "$options": "i"}},
+            {"region": {"$regex": "Nationwide", "$options": "i"}}
+        ]
+
+    # Step 4: Fetch matching schemes
+    schemes = list(financial_schemes.find(query))
+
+    # Step 5: Prioritize schemes by tag match count
+    for scheme in schemes:
+        scheme["match_score"] = sum(1 for tag in tags_filter if tag in scheme.get("tags", []))
         scheme["_id"] = str(scheme["_id"])  # Convert ObjectId
-    print(f"Number of schemes fetched: {len(data)}")  # Debug print
-    return JSONResponse(content=data)
 
-#2. Add New Scheme
-@router.post("/financial-schemes")
-async def add_scheme(scheme: FinancialScheme):
-    new_scheme = jsonable_encoder(scheme)
-    inserted_id = financial_schemes.insert_one(new_scheme).inserted_id
-    return {"message": "Scheme added successfully", "id": str(inserted_id)}
+    # Sort by match_score (higher is better)
+    schemes = sorted(schemes, key=lambda x: x["match_score"], reverse=True)
 
-#3. Delete Scheme
-@router.delete("/financial-schemes/{scheme_id}")
-async def delete_scheme(scheme_id: str):
-    result = financial_schemes.delete_one({"_id": ObjectId(scheme_id)})
-    if result.deleted_count == 1:
-        return {"message": "Scheme deleted"}
-    return {"error": "Scheme not found"}
+    return JSONResponse(content=schemes[:5])  # Return top 5 matches
