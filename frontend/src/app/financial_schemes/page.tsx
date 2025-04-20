@@ -11,18 +11,19 @@ const FinancialSchemesPage = () => {
   const [userGoal, setUserGoal] = useState<string | null>(null);
   const [schemes, setSchemes] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const normalize = (str: string) => str.trim().toLowerCase();
 
   const handleSubmit = async () => {
     if (!userHelpType || !userSituation || !userRegion || !userGoal) return;
 
     setLoading(true);
     try {
-      const res = await axios.get('/api/financial-schemes', {
+      const res = await axios.get('http://127.0.0.1:8000/api/financial/financial-schemes', {
         params: {
-          user_help_type: userHelpType,
-          user_situation: userSituation,
-          user_region: userRegion,
-          user_goal: userGoal
+            support: normalize(userHelpType),
+            situation: normalize(userSituation),
+            goal: normalize(userGoal),
+            region: normalize(userRegion) 
         }
       });
       setSchemes(res.data);
@@ -42,16 +43,38 @@ const FinancialSchemesPage = () => {
       <div className="max-w-3xl mx-auto space-y-6">
         <SchemeQuestion
           question="What kind of support are you looking for?"
-          options={['Financial Aid for Daily Living', 'Childcare Support', 'Housing', 'Healthcare']}
+          options={[
+            'Financial Support',
+            'Childcare / Creche Support',
+            'Shelter / Housing',
+            'Skill Development / Digital Literacy'
+          ]}
           selectedOption={userHelpType}
           onSelect={setUserHelpType}
         />
 
         <SchemeQuestion
           question="Which situation best describes you?"
-          options={['Single Parent (Widowed)', 'Single Parent (Divorced)', 'Unemployed', 'Low Income']}
+          options={[
+            'Single Mother',
+            'Single Father',
+            'Low-Income',
+            'Working Parent'
+          ]}
           selectedOption={userSituation}
           onSelect={setUserSituation}
+        />
+
+        <SchemeQuestion
+          question="What is your primary goal?"
+          options={[
+            'Daily Financial Assistance',
+            'Job Readiness / Skills',
+            'Child Education Support',
+            'Health or Maternity Benefits'
+          ]}
+          selectedOption={userGoal}
+          onSelect={setUserGoal}
         />
 
         <SchemeQuestion
@@ -59,13 +82,6 @@ const FinancialSchemesPage = () => {
           options={['Urban Areas', 'Rural Areas']}
           selectedOption={userRegion}
           onSelect={setUserRegion}
-        />
-
-        <SchemeQuestion
-          question="What is your primary goal?"
-          options={['Financial Aid for Daily Living', 'Job Support', 'Education Support', 'Medical Assistance']}
-          selectedOption={userGoal}
-          onSelect={setUserGoal}
         />
 
         <div className="text-center">
