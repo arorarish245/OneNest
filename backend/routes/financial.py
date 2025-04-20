@@ -72,3 +72,26 @@ async def get_schemes(
     schemes = sorted(schemes, key=lambda x: x["match_score"], reverse=True)
 
     return JSONResponse(content=schemes[:5])
+
+
+@router.get("/financial-schemes-by-region")
+async def get_schemes_by_region(region: str):
+    """
+    Fetch financial schemes based on the selected region/state.
+    """
+    region = region.strip().lower()
+
+    # Region filter, ensuring no fallback to "nationwide"
+    region_filter = {
+        "region": {"$regex": region, "$options": "i"}  # Match the exact region
+    }
+
+    # Fetch schemes filtered by region
+    schemes = list(financial_schemes.find(region_filter))
+
+    # Calculate match score (optional, if needed for prioritization)
+    for scheme in schemes:
+        scheme["_id"] = str(scheme["_id"])
+
+    # Return schemes sorted by some criteria, e.g., popularity, latest, etc.
+    return JSONResponse(content=schemes[:5])  # Adjust number if needed

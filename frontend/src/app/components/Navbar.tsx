@@ -52,7 +52,7 @@ const Navbar = () => {
             ? [
                 { href: "/", label: "Home" },
                 { href: "/sentiment", label: "Sentiment Analysis" },
-                { href: "/schemes", label: "Financial Schemes" },
+                { href: "/financial_schemes", label: "Financial Schemes" },
                 { href: "/resource", label: "Resource Hub" },
                 { href: "/contact", label: "Contact Us" },
               ]
