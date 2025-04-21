@@ -21,7 +21,8 @@ const StatewiseSchemesPage = () => {
 
   // Handle state click
   const handleStateClick = (geo: GeoType) => {
-    const stateName = geo.properties.NAME_1 ?? geo.properties.st_nm ?? geo.properties.name ?? "Unknown";
+    const stateName =
+      geo.properties.NAME_1 ?? geo.properties.st_nm ?? geo.properties.name ?? "Unknown";
     setSelectedState(stateName);
   };
 
@@ -34,7 +35,9 @@ const StatewiseSchemesPage = () => {
 
       try {
         const res = await axios.get(
-          `http://localhost:8000/api/financial/financial-schemes-by-region?region=${encodeURIComponent(selectedState)}`
+          `http://localhost:8000/api/financial/financial-schemes-by-region?region=${encodeURIComponent(
+            selectedState
+          )}`
         );
         setSchemes(res.data);
       } catch (error) {
@@ -49,21 +52,21 @@ const StatewiseSchemesPage = () => {
   }, [selectedState]);
 
   return (
-    <div className="p-9 flex flex-col items-center"
-    style={{
-        backgroundColor: "#F8F8F8",
-        backgroundImage:
-          "radial-gradient(circle, #6fc1cf 3.5px, transparent 3.5px)",
-        backgroundSize: "80px 80px",
-      }}>
-      <h1 className="text-3xl font-semibold mb-8 text-center text-teal-700">
-        Select Your State to View Available Schemes
+    <div
+      className="min-h-screen bg-gradient-to-br from-[#B8E6E2] via-[#FFFFFF] to-[#CDEBE7]
+ p-9 flex flex-col items-center"
+    >
+      <h1 className="text-4xl font-extrabold mb-10 text-center text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-orange-600 tracking-wide animate-pulse">
+      Discover Government Schemes by State
       </h1>
 
-      <div className="flex w-full max-w-7xl space-x-6 p-8">
+      <div className="flex w-full max-w-7xl space-x-6 p-6">
         {/* Left side (Map) */}
-        <div className="w-1/2">
-          <ComposableMap projection="geoMercator" projectionConfig={{ scale: 1000, center: [80, 22] }}>
+        <div className="w-2/3">
+          <ComposableMap
+            projection="geoMercator"
+            projectionConfig={{ scale: 1000, center: [80, 22] }}
+          >
             <Geographies geography={indiaGeoJson}>
               {({ geographies }: { geographies: GeoType[] }) =>
                 geographies.map((geo) => (
@@ -73,17 +76,18 @@ const StatewiseSchemesPage = () => {
                     onClick={() => handleStateClick(geo)}
                     style={{
                       default: {
-                        fill: "#E0F2F1",
+                        fill: "#B8E6E2", // OneNest light blue as map color
                         outline: "none",
-                        stroke: "#333",
-                        strokeWidth: 0.3,
+                        stroke: "#6FCF97", // Teal stroke
+                        strokeWidth: 0.6,
+                        transition: "all 0.3s ease-in-out",
                       },
                       hover: {
-                        fill: "#A5D6A7",
+                        fill: "#6FCF97", // Teal on hover
                         outline: "none",
                       },
                       pressed: {
-                        fill: "#66BB6A",
+                        fill: "#F4A261", // Orange on click
                         outline: "none",
                       },
                     }}
@@ -95,13 +99,58 @@ const StatewiseSchemesPage = () => {
         </div>
 
         {/* Right side (Schemes) */}
-        <div className="w-1/2 pl-8">
+        <div className="w-1/2 pl-7">
+          {/* Fun Facts Section - Only show if no state is selected */}
+          {!selectedState && (
+            <div className="mb-6 bg-white shadow-lg rounded-lg p-6 border-2 border-teal-500">
+              <h3 className="text-xl font-semibold text-teal-700 mb-4">
+                Did You Know?
+              </h3>
+              <ul className="space-y-4 text-gray-700">
+                <li className="flex items-start">
+                  <span className="mr-2 text-xl text-teal-700">✔</span>
+                  Over 120+ government schemes are available across India,
+                  designed to benefit every citizen!
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2 text-xl text-teal-700">✔</span>
+                  Telangana has 20+ family-focused benefits to help improve the
+                  well-being of families!
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2 text-xl text-teal-700">✔</span>
+                  The Pradhan Mantri Awas Yojana aims to provide affordable
+                  housing for all by 2022!
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2 text-xl text-teal-700">✔</span>
+                  Uttar Pradesh has over 50 schemes dedicated to farmers and
+                  agriculture.
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2 text-xl text-teal-700">✔</span>
+                  The MUDRA scheme has helped over 30 million people start their
+                  own businesses!
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2 text-xl text-teal-700">✔</span>
+                  The PM-KISAN Yojana offers direct income support to farmers
+                  across India!
+                </li>
+              </ul>
+            </div>
+          )}
+
           {selectedState && loading && (
-            <div className="text-center text-teal-700">Loading available schemes...</div>
+            <div className="text-center text-teal-700">
+              Loading available schemes...
+            </div>
           )}
 
           {selectedState && schemes.length === 0 && !loading && (
-            <p className="text-center text-gray-500">No schemes available for this state.</p>
+            <p className="text-center text-gray-500">
+              No schemes available for this state.
+            </p>
           )}
 
           {selectedState && !loading && schemes.length > 0 && (
@@ -111,7 +160,9 @@ const StatewiseSchemesPage = () => {
                   key={idx}
                   className="bg-white shadow-lg rounded-lg p-6 border-2 border-teal-500 transform transition-transform duration-300 ease-in-out hover:scale-105"
                 >
-                  <h3 className="text-xl font-semibold text-teal-700">{scheme.title}</h3>
+                  <h3 className="text-xl font-semibold text-teal-700">
+                    {scheme.title}
+                  </h3>
                   <p className="text-gray-700 mt-2">{scheme.description}</p>
 
                   {/* Eligibility */}
@@ -131,7 +182,8 @@ const StatewiseSchemesPage = () => {
                   {/* Application Process */}
                   {scheme.application_process && (
                     <div className="mt-2 text-sm text-gray-600">
-                      <strong>Application Process:</strong> {scheme.application_process}
+                      <strong>Application Process:</strong>{" "}
+                      {scheme.application_process}
                     </div>
                   )}
 
